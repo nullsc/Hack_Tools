@@ -11,10 +11,10 @@ OUTPUT = "output.txt" #this will write a new file
 INPUT = "list.txt"
 
 emails_seen = set() # holds the full line
-with open(OUTPUT, "w") as output_file:
+with open(OUTPUT, "w", errors="none") as output_file: #ignore erros (if file contains other characters)
     for each_line in open(INPUT, "r"):
         if DELIMITER in each_line: #check if the line contains the delimiter
-            email = each_line.split(DELIMITER)[0] #split into email & password
+            email = each_line.lower().split(DELIMITER)[0] #split into email & password
             passw = each_line.strip().split(DELIMITER)[1]
             # print(email)
             
