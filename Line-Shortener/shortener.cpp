@@ -26,7 +26,7 @@ int main()
 		return EXIT_FAILURE;
 	}
 
-	std::cout << "Line Removing the first " << CharNum << " characters" "\n\n";
+	std::cout << "Removing the first " << CharNum << " characters" "\n\n";
 
 	std::ifstream infile(inputFile);
 	std::string line;
@@ -60,7 +60,6 @@ int main()
 void log(std::ofstream& outfile, std::string& text) { //pass by reference
 	if (outfile.is_open()) {
 		outfile << text + "\n";
-		//outfile.close();
 	}
 	else {
 		std::cout << "Error: can't open file \n";
