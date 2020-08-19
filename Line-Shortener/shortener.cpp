@@ -4,7 +4,7 @@
 #include <fstream>
 
 
-size_t CharNum = 0; 
+size_t CharNum = 0;
 std::string inputFile = "list.txt";
 std::string outputFile = "output.txt";
 bool verbose = true;
@@ -13,11 +13,12 @@ void log(std::ofstream& infile, std::string& text);
 int shortenLeft(std::string& filename, std::string& logfile, size_t number);
 int shortenRight(std::string& filename, std::string& logfile, size_t number); //input, output, number of chars to remove
 
+enum choices {shortleft = 1, shortright};
 
 int main()
 {
         std::cout << "Line Remover\n";
-	std::cout << "Version 1.1\n\n";
+	std::cout << "Version 1.0\n\n";
 
 	std::cout << "Input file: " << inputFile << "\n";
 	std::cout << "Output file: " << outputFile << "\n\n";
@@ -29,11 +30,24 @@ int main()
 		return EXIT_FAILURE;
 	}
 
+	std::cout << "From left or right? (1, 2)\n";
+	choices choice;
+	int mode;
+	std::cin >> mode;
+	mode = static_cast<choices>(mode);
+
+	switch (mode) {
+		case shortleft:
+			shortenLeft(inputFile, outputFile, CharNum);
+			break;
+
+		case shortright:
+			shortenRight(inputFile, outputFile, CharNum);
+			break;
+	}
 
 	std::cout << "Removing the first " << CharNum << " characters" "\n\n";
 	
-	shortenRight(inputFile, outputFile, CharNum);
-
 
 	getchar();
 	return EXIT_SUCCESS;
@@ -103,3 +117,4 @@ int shortenRight(std::string& filename, std::string& logfile, size_t number) {
 	outfile.close();
 	return EXIT_SUCCESS;
 }
+
