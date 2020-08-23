@@ -4,4 +4,6 @@ Work in progress
 
 Small tool built in C++ used for editing text lists
 
-C++ used for speed so it can handle larger files
+C++ used for speed so it can handle larger files easier
+
+Compiled with Visual Studio
