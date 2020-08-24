@@ -44,10 +44,12 @@ int main()
 
 	switch (mode) {
 		case shortleft:
+			std::cin >> CharNum;
 			shortenLeft(infile, outfile, CharNum);
 			break;
 
 		case shortright:
+			std::cin >> CharNum;
 			shortenRight(infile, outfile, CharNum);
 			break;
 
