@@ -44,23 +44,27 @@ int main()
 
 	switch (mode) {
 		case shortleft:
+			std::cout << "Type in how many characters do you wish to remove\n";
 			std::cin >> CharNum;
-			shortenLeft(infile, outfile, CharNum);
+			if (CharNum > 0) shortenLeft(infile, outfile, CharNum);
 			break;
 
 		case shortright:
+			std::cout << "Type in how many characters do you wish to remove\n";
 			std::cin >> CharNum;
-			shortenRight(infile, outfile, CharNum);
+			if (CharNum > 0) shortenRight(infile, outfile, CharNum);
 			break;
 
 		case delbefore:
+			std::cout << "Type in a string\n";
 			std::cin >> input;
-			deleteBefore(infile, outfile, input);
+			if (!input.empty()) deleteBefore(infile, outfile, input);
 			break;
 
 		case delafter:
+			std::cout << "Type in a string\n";
 			std::cin >> input;
-			deleteAfter(infile, outfile, input);
+			if (!input.empty()) deleteAfter(infile, outfile, input);
 			break;
 
 		default:
