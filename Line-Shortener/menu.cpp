@@ -13,5 +13,6 @@ void printMenu() {
 	std::cout << "[2] Shorten from the right \n";
 	std::cout << "[3] Delete before [string/char] \n";
 	std::cout << "[4] Delete after [string/char] \n";
+	std::cout << "[0] Exit \n";
 	std::cout << "----------------------------------\n";
 }
