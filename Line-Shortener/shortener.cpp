@@ -18,6 +18,8 @@ int shortenRight(std::ifstream* inFile, std::ofstream* logFile, size_t number);
 int deleteAfter(std::ifstream* inFile, std::ofstream* logFile, std::string& characters); //new w/pointers
 int deleteBefore(std::ifstream* inFile, std::ofstream* logFile, std::string& characters); //new w/pointers
 
+int trimLineRight(std::ifstream* inFile, std::ofstream* logFile);
+int trimLineLeft(std::ifstream* inFile, std::ofstream* logFile);
 
 enum choices {shortleft = 1, shortright, delbefore, delafter};
 
