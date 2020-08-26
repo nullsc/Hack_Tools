@@ -16,3 +16,29 @@ void printMenu() {
 	std::cout << "[0] Exit \n";
 	std::cout << "----------------------------------\n";
 }
+
+std::string &rtrim(std::string& str) { //trim trailing whitespace from the right - log always adds a \n
+	std::string whitespace = " \t\f\v\n\r";
+	size_t space = str.find_last_not_of(whitespace);
+	if (space != std::string::npos)
+		str.erase(space + 1);
+	else
+		str.clear();
+
+	return str;
+
+}
+
+std::string& ltrim(std::string& str) { //trim trailing whitespace from the left
+	std::string whitespace = " \t\f\v\n\r"; //move to .h
+	size_t space = str.find_first_not_of(whitespace); //find the first non w/space char
+	if (space != std::string::npos) {
+		str = str.substr(space, str.size());
+	}
+	
+	return str;
+}
+
+std::string& trim(std::string& str) {
+	return ltrim(rtrim(str));
+}
