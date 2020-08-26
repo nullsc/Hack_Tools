@@ -126,6 +126,40 @@ int shortenRight(std::ifstream* inFile, std::ofstream* logFile, size_t number) {
 	return EXIT_SUCCESS;
 }
 
+int trimLineRight(std::ifstream* inFile, std::ofstream* logFile) {
+	/*removes all trailing whitespace on the right
+	*/
+	std::string line;
+
+	while (getline(*inFile, line)) {
+		std::string newline = rtrim(line); //trim right side
+		if (verbose) std::cout << newline + "\n";
+		log(*logFile, newline); //works but log adds \n
+
+	}
+
+	inFile->close();
+	logFile->close();
+	return EXIT_SUCCESS;
+}
+
+int trimLineLeft(std::ifstream* inFile, std::ofstream* logFile) {
+	/*removes all trailing whitespace on the right
+	*/
+	std::string line;
+
+	while (getline(*inFile, line)) {
+		std::string newline = ltrim(line); //trim left side
+		if (verbose) std::cout << newline + "\n";
+		log(*logFile, newline);
+
+	}
+
+	inFile->close();
+	logFile->close();
+	return EXIT_SUCCESS;
+}
+
 int deleteAfter(std::ifstream* inFile, std::ofstream* logFile, std::string& characters) { //new with pointers
 	/*removes anything after the specified character/string
 	*/
