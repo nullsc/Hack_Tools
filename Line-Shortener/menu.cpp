@@ -18,7 +18,6 @@ void printMenu() {
 }
 
 std::string &rtrim(std::string& str) { //trim trailing whitespace from the right - log always adds a \n
-	std::string whitespace = " \t\f\v\n\r";
 	size_t space = str.find_last_not_of(whitespace);
 	if (space != std::string::npos)
 		str.erase(space + 1);
@@ -30,7 +29,6 @@ std::string &rtrim(std::string& str) { //trim trailing whitespace from the right
 }
 
 std::string& ltrim(std::string& str) { //trim trailing whitespace from the left
-	std::string whitespace = " \t\f\v\n\r"; //move to .h
 	size_t space = str.find_first_not_of(whitespace); //find the first non w/space char
 	if (space != std::string::npos) {
 		str = str.substr(space, str.size());
