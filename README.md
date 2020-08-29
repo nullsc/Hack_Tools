@@ -2,6 +2,6 @@
 
 A collection of various tools and scripts.
 
-##Duplicate Line Remover
+## Duplicate Line Remover
 
 Written in Python
