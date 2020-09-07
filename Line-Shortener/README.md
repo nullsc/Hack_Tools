@@ -14,3 +14,7 @@ Compiled with Visual Studio
 * Delete before or after a substring eg. email@gmail.com -> @gmail.com
 * Delete all blank lines
 * Trim all whitespace in string (or just left/right)
+
+
+### TODO
+remmove duplicates
