@@ -13,8 +13,8 @@ Compiled with Visual Studio
 * Shorten from the string from the left or right
 * Delete before or after a substring eg. email@gmail.com -> @gmail.com
 * Delete all blank lines
-* Trim all whitespace in string (or just left/right)
+* Trim all whitespace in string (or just left/right side)
 
 
 ### TODO
-remmove duplicates
+remove duplicates
