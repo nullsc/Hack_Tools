@@ -21,29 +21,3 @@ void printMenu() {
 	std::cout << "----------------------------------\n";
 }
 
-std::string& rtrim(std::string& str) { //trim trailing whitespace from the right - works but log always adds a \n
-	size_t space = str.find_last_not_of(whitespace);
-	if (space != std::string::npos)
-		str.erase(space + 1);
-	else
-		str.clear(); //all whitespace
-
-	return str;
-
-}
-
-std::string& ltrim(std::string& str) { //trim trailing whitespace from the left - works
-	size_t space = str.find_first_not_of(whitespace); //find the first non w/space char
-	if (space != std::string::npos) {
-		str = str.substr(space, str.size());
-	}
-	
-	return str;
-}
-
-std::string& trim(std::string& str) {
-	return ltrim(rtrim(str));
-}
-
-
-//maybe make inline to make it faster
