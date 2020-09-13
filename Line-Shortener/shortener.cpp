@@ -1,45 +1,55 @@
 // This file contains the 'main' function. Program execution begins and ends there.
-// ToDo: blank line remover, delete characters, file append
 
 #include <iostream>
 #include <string>
 #include <sstream>
 #include <fstream>
 #include "menu.h"
+#include "functions.h"
 
-size_t CharNum = 0; //must be >= 0
+
+size_t CharNum = 0;
 std::string inputFile = "list.txt";
 std::string outputFile = "output.txt";
-bool verbose = true;
 
-void log(std::ofstream& outfile, std::string& text);
+
 int shortenLeft(std::ifstream* inFile, std::ofstream* logFile, size_t number);
 int shortenRight(std::ifstream* inFile, std::ofstream* logFile, size_t number);
-int deleteAfter(std::ifstream* inFile, std::ofstream* logFile, std::string& characters); //new w/pointers
-int deleteBefore(std::ifstream* inFile, std::ofstream* logFile, std::string& characters); //new w/pointers
+int deleteAfter(std::ifstream* inFile, std::ofstream* logFile, std::string& characters); //
+int deleteBefore(std::ifstream* inFile, std::ofstream* logFile, std::string& characters); //
 
+int deleteEmptyLines(std::ifstream* inFile, std::ofstream* logFile); //remove whitespace lines
 int trimLineRight(std::ifstream* inFile, std::ofstream* logFile);
 int trimLineLeft(std::ifstream* inFile, std::ofstream* logFile);
+int trimLineBoth(std::ifstream* inFile, std::ofstream* logFile);
 
-enum choices {shortleft = 1, shortright, delbefore, delafter};
+int trimmer(std::ifstream** inFile, std::ofstream** logFile);
+
+
+
+enum choices {shortleft = 1, shortright, delbefore, delafter, removeblanks, linetrimmer, removedupes, lineappend};
 
 int main()
 {
-        std::cout << "Line Remover\n";
-	std::cout << "Version 1.2\n\n";
+    std::cout << "Line Remover\n";
+	std::cout << version << "\n\n";
 
-	//banner();
+	banner();
 	printMenu();
 
-	std::ifstream* infile(new std::ifstream(inputFile)); //  (open the file pointer)
-	std::ofstream* outfile(new std::ofstream(outputFile, std::ofstream::app)); //  (open the file pointer) append
+	std::ifstream* infile(new std::ifstream(inputFile)); // open the file pointer
+	std::ofstream* outfile(new std::ofstream(outputFile, std::ofstream::app)); // (open the file pointer) append
+	if (!*infile) {
+		std::cout << "Error: can't open " << inputFile << "\n";
+		return EXIT_FAILURE;
+	}
 
 
 	std::cout << "Input file: " << inputFile << "\n";
-	std::cout << "Output file: " << outputFile << "\n\n";
+	std::cout << "Output file: " << outputFile << "\n\n"; 
 
 
-	int mode;
+	int mode; //
 	std::string input;
 	std::cin >> mode;
 	mode = static_cast<choices>(mode);
@@ -47,7 +57,7 @@ int main()
 	switch (mode) {
 		case shortleft:
 			std::cout << "Type in how many characters do you wish to remove\n";
-			std::cin >> CharNum;
+			std::cin >> CharNum; //maybe just use input
 			if (CharNum > 0) shortenLeft(infile, outfile, CharNum);
 			break;
 
@@ -66,31 +76,47 @@ int main()
 		case delafter:
 			std::cout << "Type in a string\n";
 			std::cin >> input;
-			if (!input.empty()) deleteAfter(infile, outfile, input);
+			if (!input.empty()) deleteAfter(infile, outfile, input); //not sure if isempty needed
+			break;
+
+		case removeblanks:
+			std::cout << "Deleting all blank lines\n";
+			deleteEmptyLines(infile, outfile);
+			break;
+
+		case linetrimmer:
+			std::cout << "Line trimmer (whitespace remover)\n";
+			trimmer(&infile, &outfile);
+			break;
+
+		case removedupes:
+			std::cout << "Removing duplicate lines\n";
+			removeDuplicates(infile, outfile);
+			break;
+
+		case lineappend:
+			std::cout << "Type in a string\n";
+			std::cin >> input;
+			std::cout << "Append [left 1 /right 2 /both 3]\n";
+			std::cin >> CharNum;
+			lineAppend(infile, outfile, input, CharNum);
 			break;
 
 		default:
 			return EXIT_SUCCESS;
 	}
 
+	infile->close(); //close file pointers here, can remove from each function now
+	outfile->close();
 
 	char c = getchar(); //removes warning
-	delete infile;//deallocate pointers
+	delete infile; //deallocate pointers
 	delete outfile;
 	return EXIT_SUCCESS;
 
 }
 
-void log(std::ofstream& outfile, std::string& text) { //pass by reference
-	//std::ofstream outfile(outputFile, std::ofstream::app); //append mode
-	if (outfile.is_open()) {
-		outfile << text + "\n";
-		//outfile.close();
-	}
-	else {
-		std::cout << "Error: can't open file \n";
-	}
-}
+
 
 int shortenLeft(std::ifstream* inFile, std::ofstream* logFile, size_t number) {
 	std::string line;
@@ -109,6 +135,7 @@ int shortenLeft(std::ifstream* inFile, std::ofstream* logFile, size_t number) {
 	return EXIT_SUCCESS;
 }
 
+
 int shortenRight(std::ifstream* inFile, std::ofstream* logFile, size_t number) {
 	std::string line;
 
@@ -123,6 +150,99 @@ int shortenRight(std::ifstream* inFile, std::ofstream* logFile, size_t number) {
 
 	inFile->close();
 	logFile->close();
+	return EXIT_SUCCESS;
+}
+
+
+int deleteAfter(std::ifstream* inFile, std::ofstream* logFile, std::string& characters) { //new with pointers
+	/*removes anything after the specified character/string
+	*/
+	std::string line;
+
+	while (getline(*inFile, line)) {
+		if (line.find(characters) != std::string::npos) //contains characters
+		{
+			std::string newline = line.substr(0, line.find(characters) + characters.size()); //remove end (works with string)
+			if (verbose) std::cout << newline + " delete after\n";
+			log(*logFile, newline);
+		}
+		else {
+			if (verbose) std::cout << line + " doesn't contain" + characters + " \n";
+			log(*logFile, line); //write the line anyway
+		}
+	}
+
+	inFile->close();
+	logFile->close();
+	return EXIT_SUCCESS;
+}
+
+int deleteBefore(std::ifstream* inFile, std::ofstream* logFile, std::string& characters) {
+	/*removes anything before the specified character/string
+	*/
+	std::string line;
+
+	while (getline(*inFile, line)) {
+		if (line.find(characters) != std::string::npos) //contains characters
+		{
+			//find gets the first position, line - 1 to get the last position
+			std::string newline = line.substr(line.find(characters), line.size() - 1); //remove end (works with string)
+			if (verbose) std::cout << newline + " delete before\n";
+			log(*logFile, newline);
+		}
+		else {
+			if (verbose) std::cout << line + " doesn't contain" + characters + " \n";
+			log(*logFile, line); //write the line anyway
+		}
+	}
+
+	inFile->close();
+	logFile->close();
+	return EXIT_SUCCESS;
+}
+
+int trimmer(std::ifstream** inFile, std::ofstream** logFile/*,int mode*/) { // include types
+	std::cout << "Trim [left 1 /right 2 /both 3]\n";
+	size_t input;
+	std::cin >> input;
+	
+	switch (input) {
+		case LEFT:
+			trimLineLeft(*inFile, *logFile);
+			break;
+
+		case RIGHT:
+			trimLineRight(*inFile, *logFile);
+			break;
+
+		case BOTH:
+			trimLineBoth(*inFile, *logFile);
+			break;
+
+		default:
+			std::cout << "Error: Please enter a number\n";
+			return 1;
+
+	}
+
+	return EXIT_SUCCESS;
+}
+
+int trimLineBoth(std::ifstream* inFile, std::ofstream* logFile) {
+	/*removes all trailing whitespace on the left & right
+	maybe add a blank line check for trim both
+	*/
+	std::string line;
+
+	while (getline(*inFile, line)) {
+		std::string newline = trim(line); //trim both sides
+		if (verbose) std::cout << newline + "\n";
+		log(*logFile, newline); //works but log adds \n
+
+	}
+
+	//inFile->close();
+	//logFile->close();
 	return EXIT_SUCCESS;
 }
 
@@ -160,47 +280,17 @@ int trimLineLeft(std::ifstream* inFile, std::ofstream* logFile) {
 	return EXIT_SUCCESS;
 }
 
-int deleteAfter(std::ifstream* inFile, std::ofstream* logFile, std::string& characters) { //new with pointers
-	/*removes anything after the specified character/string
+int deleteEmptyLines(std::ifstream* inFile, std::ofstream* logFile) {
+	/*deletes all empty lines
 	*/
 	std::string line;
 
 	while (getline(*inFile, line)) {
-		if (line.find(characters) != std::string::npos) //contains characters
-		{
-			//std::string newline = line.substr(0, line.find_first_of(characters)); //remove end (char only)
-			std::string newline = line.substr(0, line.find(characters) + characters.size()); //remove end (works with string)
-			if (verbose) std::cout << newline + " delete after\n";
-			log(*logFile, newline);
+		if (!isAllBlank(line)) { //if it's not blank, write it
+			if (verbose) std::cout << line + " \n";
+			log(*logFile, line);
 		}
-		else {
-			if (verbose) std::cout << line + " doesn't contain" + characters + " \n";
-			log(*logFile, line); //write the line anyway
-		}
-	}
-
-	inFile->close();
-	logFile->close();
-	return EXIT_SUCCESS;
-}
-
-int deleteBefore(std::ifstream* inFile, std::ofstream* logFile, std::string& characters) {
-	/*removes anything before the specified character/string
-	*/
-	std::string line;
-
-	while (getline(*inFile, line)) {
-		if (line.find(characters) != std::string::npos) //contains characters
-		{
-			//find gets the first position, line - 1 to get the last position
-			std::string newline = line.substr(line.find(characters), line.size() - 1); //remove end (works with string)
-			if (verbose) std::cout << newline + " delete before\n";
-			log(*logFile, newline);
-		}
-		else {
-			if (verbose) std::cout << line + " doesn't contain" + characters + " \n";
-			log(*logFile, line); //write the line anyway
-		}
+    
 	}
 
 	inFile->close();
