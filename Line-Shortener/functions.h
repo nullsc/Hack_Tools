@@ -7,6 +7,9 @@
 #include <vector>
 #include <algorithm>
 
+const bool verbose = true; //true to print out lines
+const std::string version = "Version 1.5.2";
+
 #define LEFT 1 //trimmer
 #define RIGHT 2
 #define BOTH 3
@@ -15,7 +18,7 @@
 
 const std::string whitespace = " \t\f\v\n\r"; //needs to be const
 
-void log(std::ofstream& outfile, std::string& text); //was ofstream& infile
+void log(std::ofstream& outfile, std::string& text);
 bool isAllBlank(std::string& str);
 unsigned long getListSize(std::ifstream* inFile); //file needs to be already opened
 int removeDuplicates(std::ifstream* inFile, std::ofstream* logFile);
