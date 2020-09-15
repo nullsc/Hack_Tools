@@ -10,11 +10,14 @@ Compiled with Visual Studio
 
 ### Features
 
-* Shorten from the string from the left or right
+* Shorten the string from the left or right
 * Delete before or after a substring eg. email@gmail.com -> @gmail.com
 * Delete all blank lines
 * Trim all whitespace in string (or just left/right side)
+* Remove duplicate lines
+* Line append
 
 
 ### TODO
-remove duplicates
+File joiner
+Use arg to get file names
