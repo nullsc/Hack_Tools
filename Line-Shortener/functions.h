@@ -20,6 +20,7 @@ const std::string whitespace = " \t\f\v\n\r"; //needs to be const
 
 void log(std::ofstream& outfile, std::string& text);
 bool isAllBlank(std::string& str);
+bool isValidChar(const char c);
 unsigned long getListSize(std::ifstream* inFile); //file needs to be already opened
 int removeDuplicates(std::ifstream* inFile, std::ofstream* logFile);
 
