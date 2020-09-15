@@ -36,6 +36,13 @@ bool isAllBlank(std::string& str) {
 		return true; //is all blank/whitespace
 }
 
+bool isValidChar(const char c) {
+	/*Checks to see if a character is a valid ASCII
+	https://www.cs.cmu.edu/~pattis/15-1XX/common/handouts/ascii.html
+	255 for extended ASCII*/
+	return (c >= 0 && c < 128) ? true : false;
+}
+
 std::string& rtrim(std::string& str) { //trim trailing whitespace from the right - works but log always adds a \n
 	//std::string whitespace = " \t\f\v\n\r";
 	size_t space = str.find_last_not_of(whitespace);
