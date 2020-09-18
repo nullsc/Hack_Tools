@@ -18,7 +18,7 @@ const std::string version = "Version 1.5.4";
 
 const std::string whitespace = " \t\f\v\n\r"; //needs to be const
 
-void log(std::ofstream& outfile, std::string& text);
+void log(std::ofstream& outfile, std::string& text); //was ofstream& infile
 bool isAllBlank(std::string& str);
 bool isValidChar(const char c);
 std::streamoff getListSize(std::ifstream* inFile); //file needs to be already opened
