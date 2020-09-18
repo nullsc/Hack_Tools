@@ -2,21 +2,22 @@
 #include "menu.h"
 
 
-void log(std::ofstream& outfile, std::string& text) { //pass by reference
+void log(std::ofstream& outfile, std::string& text) { //pass by reference (maybe put verbose print line in here)
 	//std::ofstream outfile(outputFile, std::ofstream::app); //append mode
 	if (outfile.is_open()) {
 		outfile << text + "\n";
-		//outfile.close();
 	}
 	else {
 		std::cout << "Error: can't open file \n";
 	}
 }
 
-unsigned long getListSize(std::ifstream* inFile) {
+std::streamoff getListSize(std::ifstream* inFile) {
 	/*Get file size in bytes
 	unsigned long max value = 4294967295 
 	may change to convert to mb
+	https://stackoverflow.com/questions/15172315/c-resolving-istreamtellg-warning
+	streamoff = long long
 	*/
 	unsigned long file_size;
 	inFile->seekg(0, std::ios::end); //move pointer to end of file
@@ -43,8 +44,18 @@ bool isValidChar(const char c) {
 	return (c >= 0 && c < 128) ? true : false;
 }
 
-std::string& rtrim(std::string& str) { //trim trailing whitespace from the right - works but log always adds a \n
-	//std::string whitespace = " \t\f\v\n\r";
+std::string removeNonChars(std::string str) {
+	std::string tempstr;
+	for (size_t i = 0; i < str.length(); ++i) {
+		if (isValidChar(str[i])) { //if it's valid, write it
+			tempstr += str[i];
+		}
+	}
+	return tempstr;
+}
+
+std::string rtrim(std::string str) { //trim trailing whitespace from the right - works but log always adds a \n
+	/*pass and return value*/
 	size_t space = str.find_last_not_of(whitespace);
 	if (space != std::string::npos)
 		str.erase(space + 1);
@@ -55,7 +66,7 @@ std::string& rtrim(std::string& str) { //trim trailing whitespace from the right
 
 }
 
-std::string& ltrim(std::string& str) { //trim trailing whitespace from the left - works
+std::string ltrim(std::string str) { //trim trailing whitespace from the left - works
 	size_t space = str.find_first_not_of(whitespace); //find the first non w/space char
 	if (space != std::string::npos) {
 		str = str.substr(space, str.size());
@@ -64,7 +75,7 @@ std::string& ltrim(std::string& str) { //trim trailing whitespace from the left 
 	return str;
 }
 
-std::string& trim(std::string& str) {
+std::string trim(std::string str) {
 	return ltrim(rtrim(str));
 }
 
@@ -77,25 +88,31 @@ int lineAppend(std::ifstream* inFile, std::ofstream* logFile, std::string& str, 
 	std::string line;
 	std::string newline;
 
+	if (mode > BOTH || mode < LEFT) {
+		std::cout << "Error: Please enter a valid number\n";
+		return EXIT_FAILURE;
+	}
 
 	while (getline(*inFile, line) && !isAllBlank(line)) {
-		//log(*logFile, newline);
 		
 
 		switch (mode) {
 		case LEFT:
 			newline = str + line;
 			log(*logFile, newline);
+			if (verbose) std::cout << newline + "\n";
 			break;
 
 		case RIGHT:
 			newline = line + str;
 			log(*logFile, newline);
+			if (verbose) std::cout << newline + "\n";
 			break;
 
 		case BOTH:
 			newline = str + line + str;
 			log(*logFile, newline);
+			if (verbose) std::cout << newline + "\n";
 			break;
 
 		default:
@@ -106,8 +123,6 @@ int lineAppend(std::ifstream* inFile, std::ofstream* logFile, std::string& str, 
 
 	}
 
-	inFile->close();
-	logFile->close();
 	return EXIT_SUCCESS;
 }
 
@@ -117,7 +132,6 @@ int removeDuplicates(std::ifstream* inFile, std::ofstream* logFile) {
 	add a trim function to make things easier otherwise you get duplicates with whitespace
 	Might change this to a map function*/
 
-	//std::cout << "vector \n"; //debug
 	std::string line;
 	if (getListSize(inFile) < MAX_VECTOR_SIZE) { //check if the file is too big to put into a vector (in bytes)
 		std::vector<std::string> lines = {};
@@ -138,7 +152,7 @@ int removeDuplicates(std::ifstream* inFile, std::ofstream* logFile) {
 
 			}
 
-		}//else
+		}
 	}
 	
 	return EXIT_SUCCESS;
