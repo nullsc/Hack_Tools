@@ -1,5 +1,6 @@
 // This file contains the 'main' function. Program execution begins and ends there.
 
+
 #include <iostream>
 #include <string>
 #include <sstream>
@@ -8,15 +9,16 @@
 #include "functions.h"
 
 
-size_t CharNum = 0;
-std::string inputFile = "list.txt";
+size_t CharNum = 0; //
+std::string inputFile = "list.txt"; //change to arg
 std::string outputFile = "output.txt";
+
 
 
 int shortenLeft(std::ifstream* inFile, std::ofstream* logFile, size_t number);
 int shortenRight(std::ifstream* inFile, std::ofstream* logFile, size_t number);
-int deleteAfter(std::ifstream* inFile, std::ofstream* logFile, std::string& characters); //
-int deleteBefore(std::ifstream* inFile, std::ofstream* logFile, std::string& characters); //
+int deleteAfter(std::ifstream* inFile, std::ofstream* logFile, std::string& characters); //new w/pointers
+int deleteBefore(std::ifstream* inFile, std::ofstream* logFile, std::string& characters); //new w/pointers 
 
 int deleteEmptyLines(std::ifstream* inFile, std::ofstream* logFile); //remove whitespace lines
 int trimLineRight(std::ifstream* inFile, std::ofstream* logFile);
@@ -24,12 +26,13 @@ int trimLineLeft(std::ifstream* inFile, std::ofstream* logFile);
 int trimLineBoth(std::ifstream* inFile, std::ofstream* logFile);
 
 int trimmer(std::ifstream** inFile, std::ofstream** logFile);
+int removeNonASCIILines(std::ifstream* inFile, std::ofstream* logFile);
 
 
+enum choices {shortleft = 1, shortright, delbefore, delafter, removeblanks, linetrimmer, removedupes, 
+			lineappend, removenonascii};
 
-enum choices {shortleft = 1, shortright, delbefore, delafter, removeblanks, linetrimmer, removedupes, lineappend};
-
-int main()
+int main(int argc, int *argv[])
 {
     std::cout << "Line Remover\n";
 	std::cout << version << "\n\n";
@@ -38,9 +41,10 @@ int main()
 	printMenu();
 
 	std::ifstream* infile(new std::ifstream(inputFile)); // open the file pointer
-	std::ofstream* outfile(new std::ofstream(outputFile, std::ofstream::app)); // (open the file pointer) append
+	std::ofstream* outfile(new std::ofstream(outputFile, std::ofstream::app)); //test  (open the file pointer) append
 	if (!*infile) {
 		std::cout << "Error: can't open " << inputFile << "\n";
+		std::cin >> CharNum;
 		return EXIT_FAILURE;
 	}
 
@@ -48,8 +52,7 @@ int main()
 	std::cout << "Input file: " << inputFile << "\n";
 	std::cout << "Output file: " << outputFile << "\n\n"; 
 
-
-	int mode; //
+	int mode; //maybe put in a function in menu.cpp to loop
 	std::string input;
 	std::cin >> mode;
 	mode = static_cast<choices>(mode);
@@ -102,14 +105,22 @@ int main()
 			lineAppend(infile, outfile, input, CharNum);
 			break;
 
+		case removenonascii:
+			std::cout << "Removing all non ASCII characters \n";
+			removeNonASCIILines(infile, outfile);
+			break;
+
 		default:
 			return EXIT_SUCCESS;
 	}
 
-	infile->close(); //close file pointers here, can remove from each function now
+
+	infile->close(); //close file pointers here
 	outfile->close();
 
-	char c = getchar(); //removes warning
+	std::cout << "Complete! Press any key to quit \n"
+				  "Thank you for using LINET	\n";
+	std::cin >> input;
 	delete infile; //deallocate pointers
 	delete outfile;
 	return EXIT_SUCCESS;
@@ -130,8 +141,8 @@ int shortenLeft(std::ifstream* inFile, std::ofstream* logFile, size_t number) {
 		}
 	}
 
-	inFile->close();
-	logFile->close();
+	//inFile->close();
+	//logFile->close();
 	return EXIT_SUCCESS;
 }
 
@@ -148,8 +159,8 @@ int shortenRight(std::ifstream* inFile, std::ofstream* logFile, size_t number) {
 		}
 	}
 
-	inFile->close();
-	logFile->close();
+	//inFile->close();
+	//logFile->close();
 	return EXIT_SUCCESS;
 }
 
@@ -162,6 +173,7 @@ int deleteAfter(std::ifstream* inFile, std::ofstream* logFile, std::string& char
 	while (getline(*inFile, line)) {
 		if (line.find(characters) != std::string::npos) //contains characters
 		{
+			//std::string newline = line.substr(0, line.find_first_of(characters)); //remove end (char only)
 			std::string newline = line.substr(0, line.find(characters) + characters.size()); //remove end (works with string)
 			if (verbose) std::cout << newline + " delete after\n";
 			log(*logFile, newline);
@@ -172,8 +184,8 @@ int deleteAfter(std::ifstream* inFile, std::ofstream* logFile, std::string& char
 		}
 	}
 
-	inFile->close();
-	logFile->close();
+	//inFile->close();
+	//logFile->close();
 	return EXIT_SUCCESS;
 }
 
@@ -196,12 +208,12 @@ int deleteBefore(std::ifstream* inFile, std::ofstream* logFile, std::string& cha
 		}
 	}
 
-	inFile->close();
-	logFile->close();
+	//inFile->close();
+	//logFile->close();
 	return EXIT_SUCCESS;
 }
 
-int trimmer(std::ifstream** inFile, std::ofstream** logFile/*,int mode*/) { // include types
+int trimmer(std::ifstream** inFile, std::ofstream** logFile/*,int mode*/) { //works - include types
 	std::cout << "Trim [left 1 /right 2 /both 3]\n";
 	size_t input;
 	std::cin >> input;
@@ -258,8 +270,8 @@ int trimLineRight(std::ifstream* inFile, std::ofstream* logFile) {
 
 	}
 
-	inFile->close();
-	logFile->close();
+	//inFile->close();
+	//logFile->close();
 	return EXIT_SUCCESS;
 }
 
@@ -275,8 +287,8 @@ int trimLineLeft(std::ifstream* inFile, std::ofstream* logFile) {
 
 	}
 
-	inFile->close();
-	logFile->close();
+	//inFile->close();
+	//logFile->close();
 	return EXIT_SUCCESS;
 }
 
@@ -293,7 +305,22 @@ int deleteEmptyLines(std::ifstream* inFile, std::ofstream* logFile) {
     
 	}
 
-	inFile->close();
-	logFile->close();
+	//inFile->close();
+	//logFile->close();
 	return EXIT_SUCCESS;
 }
+
+int removeNonASCIILines(std::ifstream* inFile, std::ofstream* logFile) {
+	std::string line;
+
+	while (getline(*inFile, line)) {
+		//if (!isAllBlank(line)) { //if it's not blank, write it
+		line = removeNonChars(line);
+		if (verbose) std::cout << line + " \n";
+		log(*logFile, line);
+		//}
+
+	}
+	return EXIT_SUCCESS;
+}
+
