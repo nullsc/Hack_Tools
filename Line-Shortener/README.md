@@ -8,6 +8,14 @@ C++ used for speed so it can handle larger files easier
 
 Compiled with Visual Studio
 
+### To Use
+
+* Either compile the source or run LINET.exe
+* Enter your text file names as command line arguments eg. LINET.exe input.txt output.txt
+* Then enter which menu options you want
+* Click enter!
+* The output file will be generated with the new list
+
 ### Features
 
 * Shorten the string from the left or right
@@ -19,5 +27,5 @@ Compiled with Visual Studio
 
 
 ### TODO
-File joiner
-Use arg to get file names
+* File joiner
+* Maybe a search feature
