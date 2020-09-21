@@ -1,6 +1,5 @@
 // This file contains the 'main' function. Program execution begins and ends there.
 
-
 #include <iostream>
 #include <string>
 #include <sstream>
@@ -9,16 +8,15 @@
 #include "functions.h"
 
 
-size_t CharNum = 0; //
-std::string inputFile = "list.txt"; //change to arg
+size_t CharNum = 0;
+std::string inputFile = "list.txt"; //
 std::string outputFile = "output.txt";
-
 
 
 int shortenLeft(std::ifstream* inFile, std::ofstream* logFile, size_t number);
 int shortenRight(std::ifstream* inFile, std::ofstream* logFile, size_t number);
-int deleteAfter(std::ifstream* inFile, std::ofstream* logFile, std::string& characters); //new w/pointers
-int deleteBefore(std::ifstream* inFile, std::ofstream* logFile, std::string& characters); //new w/pointers 
+int deleteAfter(std::ifstream* inFile, std::ofstream* logFile, std::string& characters); //new w/pointers 
+int deleteBefore(std::ifstream* inFile, std::ofstream* logFile, std::string& characters); //new w/pointers
 
 int deleteEmptyLines(std::ifstream* inFile, std::ofstream* logFile); //remove whitespace lines
 int trimLineRight(std::ifstream* inFile, std::ofstream* logFile);
@@ -32,25 +30,32 @@ int removeNonASCIILines(std::ifstream* inFile, std::ofstream* logFile);
 enum choices {shortleft = 1, shortright, delbefore, delafter, removeblanks, linetrimmer, removedupes, 
 			lineappend, removenonascii};
 
-int main(int argc, int *argv[])
+int main(int argc, char* argv[])
 {
-    std::cout << "Line Remover\n";
-	std::cout << version << "\n\n";
-
 	banner();
+	std::cout << "\nLINET (Line Tool) ";
+	std::cout << version << "\n\n";
 	printMenu();
+
+	if (argc != 3){
+		std::cout << "Error: Usage " << argv[0] << " input_file output_file \n";
+		std::cin.ignore();
+		return EXIT_FAILURE;
+	}
+
+	inputFile = argv[1]; //comment out for debug
+	outputFile = argv[2];
 
 	std::ifstream* infile(new std::ifstream(inputFile)); // open the file pointer
 	std::ofstream* outfile(new std::ofstream(outputFile, std::ofstream::app)); //test  (open the file pointer) append
 	if (!*infile) {
-		std::cout << "Error: can't open " << inputFile << "\n";
-		std::cin >> CharNum;
+		std::cout << "Error: Can't open " << inputFile << "\n";
 		return EXIT_FAILURE;
 	}
 
-
 	std::cout << "Input file: " << inputFile << "\n";
 	std::cout << "Output file: " << outputFile << "\n\n"; 
+
 
 	int mode; //maybe put in a function in menu.cpp to loop
 	std::string input;
@@ -59,13 +64,13 @@ int main(int argc, int *argv[])
 
 	switch (mode) {
 		case shortleft:
-			std::cout << "Type in how many characters do you wish to remove\n";
+			std::cout << "Type in how many characters you wish to remove\n";
 			std::cin >> CharNum; //maybe just use input
 			if (CharNum > 0) shortenLeft(infile, outfile, CharNum);
 			break;
 
 		case shortright:
-			std::cout << "Type in how many characters do you wish to remove\n";
+			std::cout << "Type in how many characters you wish to remove\n";
 			std::cin >> CharNum;
 			if (CharNum > 0) shortenRight(infile, outfile, CharNum);
 			break;
@@ -100,7 +105,7 @@ int main(int argc, int *argv[])
 		case lineappend:
 			std::cout << "Type in a string\n";
 			std::cin >> input;
-			std::cout << "Append [left 1 /right 2 /both 3]\n";
+			std::cout << "Append [left 1 / Right 2 / Both 3]\n";
 			std::cin >> CharNum;
 			lineAppend(infile, outfile, input, CharNum);
 			break;
@@ -114,15 +119,17 @@ int main(int argc, int *argv[])
 			return EXIT_SUCCESS;
 	}
 
-
-	infile->close(); //close file pointers here
+	
+	infile->close(); //close file pointers here, can remove from each function now
 	outfile->close();
 
 	std::cout << "Complete! Press any key to quit \n"
 				  "Thank you for using LINET	\n";
-	std::cin >> input;
+	//std::cin >> input;
+	std::cin.ignore();
 	delete infile; //deallocate pointers
 	delete outfile;
+
 	return EXIT_SUCCESS;
 
 }
@@ -141,11 +148,8 @@ int shortenLeft(std::ifstream* inFile, std::ofstream* logFile, size_t number) {
 		}
 	}
 
-	//inFile->close();
-	//logFile->close();
 	return EXIT_SUCCESS;
 }
-
 
 int shortenRight(std::ifstream* inFile, std::ofstream* logFile, size_t number) {
 	std::string line;
@@ -159,8 +163,6 @@ int shortenRight(std::ifstream* inFile, std::ofstream* logFile, size_t number) {
 		}
 	}
 
-	//inFile->close();
-	//logFile->close();
 	return EXIT_SUCCESS;
 }
 
@@ -184,8 +186,6 @@ int deleteAfter(std::ifstream* inFile, std::ofstream* logFile, std::string& char
 		}
 	}
 
-	//inFile->close();
-	//logFile->close();
 	return EXIT_SUCCESS;
 }
 
@@ -208,13 +208,12 @@ int deleteBefore(std::ifstream* inFile, std::ofstream* logFile, std::string& cha
 		}
 	}
 
-	//inFile->close();
-	//logFile->close();
 	return EXIT_SUCCESS;
 }
 
 int trimmer(std::ifstream** inFile, std::ofstream** logFile/*,int mode*/) { //works - include types
-	std::cout << "Trim [left 1 /right 2 /both 3]\n";
+	//trimLineRight(*inFile, *logFile);
+	std::cout << "Trim [Left 1 / Right 2 / Both 3]\n";
 	size_t input;
 	std::cin >> input;
 	
@@ -253,8 +252,6 @@ int trimLineBoth(std::ifstream* inFile, std::ofstream* logFile) {
 
 	}
 
-	//inFile->close();
-	//logFile->close();
 	return EXIT_SUCCESS;
 }
 
@@ -270,8 +267,6 @@ int trimLineRight(std::ifstream* inFile, std::ofstream* logFile) {
 
 	}
 
-	//inFile->close();
-	//logFile->close();
 	return EXIT_SUCCESS;
 }
 
@@ -287,8 +282,6 @@ int trimLineLeft(std::ifstream* inFile, std::ofstream* logFile) {
 
 	}
 
-	//inFile->close();
-	//logFile->close();
 	return EXIT_SUCCESS;
 }
 
@@ -305,8 +298,6 @@ int deleteEmptyLines(std::ifstream* inFile, std::ofstream* logFile) {
     
 	}
 
-	//inFile->close();
-	//logFile->close();
 	return EXIT_SUCCESS;
 }
 
@@ -323,4 +314,3 @@ int removeNonASCIILines(std::ifstream* inFile, std::ofstream* logFile) {
 	}
 	return EXIT_SUCCESS;
 }
-
