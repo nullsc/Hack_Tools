@@ -9,7 +9,7 @@ void banner() {
 				"+#+            +#+     +#+ +:+ +#+ +#++:++#       +#+     \n"
 				"+#+            +#+     +#+  +#+#+# +#+            +#+     \n"
 				"#+#            #+#     #+#   #+#+# #+#            #+#     	\n"
-				"########## ########### ###    #### ##########     ###     \n\n\n";
+				"########## ########### ###    #### ##########     ###     \n\n";
 
 
 	std::cout << "Type in your preferred option \n";
@@ -18,7 +18,7 @@ void banner() {
 }
 
 void printMenu() {
-	std::cout << "---------------- Menu ----------------\n";
+	std::cout << "------------------- Menu -------------------\n";
 	std::cout << "[1] Shorten from the left [number of chars to remove]\n";
 	std::cout << "[2] Shorten from the right [number of chars to remove]\n";
 	std::cout << "[3] Delete before [string/char] \n";
@@ -29,6 +29,5 @@ void printMenu() {
 	std::cout << "[8] Line append [left/right/both] \n";
 	std::cout << "[9] Remove all non ASCII characters \n";
 	std::cout << "[0] Exit \n";
-	std::cout << "--------------------------------------\n";
+	std::cout << "--------------------------------------------\n";
 }
-
