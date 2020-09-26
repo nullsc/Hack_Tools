@@ -29,3 +29,5 @@ Compiled with Visual Studio
 ### TODO
 * File joiner
 * Maybe a search feature
+
+To compile: Open files in Visual Studio, main function is in shortner.cpp then hit build solution.
