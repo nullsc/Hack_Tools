@@ -30,4 +30,4 @@ Compiled with Visual Studio
 * File joiner
 * Maybe a search feature
 
-To compile: Open files in Visual Studio, main function is in shortner.cpp then hit build solution.
+To compile: Open files in Visual Studio, main function is in shortener.cpp then build solution.
