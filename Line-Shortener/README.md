@@ -29,5 +29,6 @@ Compiled with Visual Studio
 ### TODO
 * File joiner
 * Maybe a search feature
+* Add multithreading
 
 To compile: Open files in Visual Studio, main function is in shortener.cpp then build solution.
